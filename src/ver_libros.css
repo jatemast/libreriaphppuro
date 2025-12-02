@@ -1,0 +1,102 @@
+body {
+  background: #f3f3f3;
+}
+
+/* Animación general */
+.fade-in {
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.contenedor-libro {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.btn-regresar {
+  display: inline-block;
+  margin-bottom: 15px;
+  background: #333;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: 0.3s ease;
+}
+
+.btn-regresar:hover {
+  background: #555;
+}
+
+.titulo-libro {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.tarjeta-libro {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  justify-content: center;
+  align-items: flex-start;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Imagen */
+.img-libro {
+  width: 260px;
+  height: 380px;
+  object-fit: cover;
+  border-radius: 12px;
+  transition: transform 0.3s;
+}
+
+/* Hover zoom */
+.zoom-container:hover .img-libro {
+  transform: scale(1.05);
+}
+
+/* Texto */
+.info-libro {
+  max-width: 450px;
+}
+
+.form-carrito {
+  margin-top: 20px;
+}
+
+.input-cant {
+  width: 120px;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.btn-agregar {
+  width: 100%;
+  padding: 12px;
+  margin-top: 12px;
+  background: #007bff;
+  border: none;
+  color: white;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+.btn-agregar:hover {
+  background: #0056c9;
+}

@@ -1,0 +1,120 @@
+/* Fondo general */
+body {
+  background: #ffffff;
+  color: #0c0000;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* Botón regresar */
+.btn-regresar {
+  display: inline-block;
+  margin: 20px 0;
+  padding: 10px 18px;
+  background: #444;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: 0.3s ease;
+}
+
+.btn-regresar:hover {
+  background: #666;
+  transform: translateX(-4px);
+}
+
+/* Contenedor general */
+h2 {
+  margin-top: 10px;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Tabla */
+table {
+  background: #1a1a1a;
+  color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+table th {
+  background: #222;
+  color: #d1d1d1;
+}
+
+table td {
+  vertical-align: middle;
+}
+
+/* Botones */
+.btn {
+  transition: 0.3s ease;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+}
+
+.btn-danger:hover {
+  background: #ff4a4a !important;
+}
+
+.btn-success:hover {
+  background: #1fa85b !important;
+}
+
+.btn-warning:hover {
+  background: #ffcc4d !important;
+}
+
+/* Imagenes */
+table img {
+  border: 2px solid #333;
+  transition: 0.3s ease;
+}
+
+table img:hover {
+  transform: scale(1.1);
+}
+
+/* ALERTAS */
+.alert {
+  animation: fadeIn 0.6s ease;
+}
+
+/* Responsividad → Modo tarjetas para móviles */
+@media (max-width: 768px) {
+  table {
+    display: block;
+  }
+
+  table thead {
+    display: none;
+  }
+
+  table tbody tr {
+    display: block;
+    margin-bottom: 15px;
+    padding: 15px;
+    background: #1a1a1a;
+    border-radius: 10px;
+  }
+
+  table td {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 5px;
+  }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

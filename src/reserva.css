@@ -1,0 +1,60 @@
+:root {
+  --fondo: #0c0f14;
+  --panel: #11161d;
+  --glass: rgba(255, 255, 255, 0.08);
+  --borde: rgba(255, 255, 255, 0.15);
+  --texto: #e6e6e6;
+  --acento: #1a3a70;
+  --acento-hover: #11264a;
+}
+
+body {
+  background: var(--fondo);
+  color: var(--texto);
+}
+
+form {
+  background: var(--glass);
+  padding: 30px;
+  border-radius: 15px;
+  border: 1px solid var(--borde);
+  backdrop-filter: blur(8px);
+  animation: slideUp 1s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+input,
+select {
+  background: #0e1218;
+  border: 1px solid var(--borde);
+  color: white;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--acento);
+  box-shadow: 0 0 10px var(--acento);
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background: var(--acento);
+  border-radius: 10px;
+}
+
+button:hover {
+  background: var(--acento-hover);
+  transform: scale(1.04);
+}
