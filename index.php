@@ -2,17 +2,17 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 session_start();
-//Importamos la libreria de la base de datos
-require_once __DIR__ . "/logica/conexion.php";
 
+// Importamos la libreria de funciones de la API
+require_once __DIR__ . "/logica/funciones_api.php";
 
-//Codigo que nos ayuda a que las imagenes se muestren y se cambien aleatoriamaente
-$result = $conexion->query("
-    SELECT id_libro,titulo, descripcion, imagen 
-    FROM libros 
-    ORDER BY RAND() DESC 
-    LIMIT 6
-");
+// Obtenemos los libros de la API
+$libros_destacados = obtenerLibrosDeAPI();
+
+// Si la obtención de libros falla, se establecerá como un array vacío para evitar errores.
+if ($libros_destacados === null) {
+    $libros_destacados = [];
+}
 ?>
 
 <!DOCTYPE html>
@@ -51,7 +51,7 @@ $result = $conexion->query("
     <div class="collapse navbar-collapse" id="navbarContent">
       <ul class="navbar-nav ms-auto">
 
-        <?php if (isset($_SESSION['nombre'])): ?>
+        <?php if (isset($_SESSION['user_name'])): ?>
         <!-- Usuario logueado -->
         <li class="nav-item dropdown d-flex align-items-center">
           <img
@@ -69,31 +69,17 @@ $result = $conexion->query("
             role="button"
             data-bs-toggle="dropdown"
           >
-            <?php echo $_SESSION['nombre']; ?>
+            <?php echo $_SESSION['user_name']; ?>
           </a>
 
           <ul class="dropdown-menu dropdown-menu-end">
-
-    <?php 
-    // Si el usuario es administrador → va a la administración
-    if ($_SESSION['rol'] === 1): ?>
-    
         <li>
-            <a class="dropdown-item" href="administrador/index.php">
-                Mi perfil (Administrador)
-            </a>
-        </li>
-
-    <?php else: ?>
-    
-        <!-- Si es usuario normal → va a su panel personal -->
-        <li>
+            <!-- Por ahora, redirigimos a todos los usuarios a su panel personal por defecto.
+                 Si la API proporciona roles, esta lógica necesitará ser revisada. -->
             <a class="dropdown-item" href="usuarios/index.php">
-                Mi perfil (Cliente)
+                Mi perfil
             </a>
         </li>
-
-    <?php endif; ?>
 
     <li><a class="dropdown-item" href="../logica/logout.php">Cerrar sesión</a></li>
 </ul>
@@ -124,54 +110,83 @@ $result = $conexion->query("
 
     <div class="row mt-3">
 
-    <?php 
-    $result = $conexion->query("
-        SELECT libros.id_libro, libros.titulo, libros.imagen,
-               autores.nombre AS autor_nombre, autores.apellido AS autor_apellido
-        FROM libros
-        INNER JOIN autores ON libros.id_autor = autores.id_autor
-        ORDER BY RAND()
-        LIMIT 6
-    ");
+    <?php
+    if (!empty($libros_destacados)):
+        $librosPorPagina = 6; // Cantidad de libros a mostrar por página
+        $totalLibros = count($libros_destacados);
+        $totalPaginas = ceil($totalLibros / $librosPorPagina);
 
-    while ($libro = $result->fetch_assoc()): 
+        $paginaActual = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $paginaActual = max(1, min($paginaActual, $totalPaginas)); // Asegura que la página sea válida
+
+        $offset = ($paginaActual - 1) * $librosPorPagina;
+        $libros_a_mostrar = array_slice($libros_destacados, $offset, $librosPorPagina);
+
+        foreach ($libros_a_mostrar as $libro):
     ?>
     <div class="col-md-4 mb-4">
         <div class="card libro-card">
-            <a href="libros/ver_libros.php?id=<?= $libro['id_libro'] ?>" class="sin-estilo">
+            <a href="libros/ver_libros.php?id=<?= $libro['id'] ?>" class="sin-estilo">
 
-                <!-- Imagen tipo libro vertical -->
-                <?php if (!empty($libro['imagen'])): ?>
-                    <img 
-                        src="data:image/jpeg;base64,<?= base64_encode($libro['imagen']) ?>"
+                <!-- Imagen del libro desde la URL de la API -->
+                <?php if (!empty($libro['image_url'])): ?>
+                    <img
+                        src="<?= htmlspecialchars($libro['image_url']) ?>"
                         class="card-img-top portada-libro"
+                        alt="<?= htmlspecialchars($libro['name']) ?>"
                     >
                 <?php else: ?>
-                    <img 
+                    <img
                         src="img/libros/reload.jpg"
                         class="card-img-top libro-imagen"
+                        alt="Imagen no disponible"
                     >
                 <?php endif; ?>
 
                 <div class="card-body">
                     <h5 class="card-title texto-blanco">
-                        <?= htmlspecialchars($libro['titulo']) ?>
+                        <?= htmlspecialchars($libro['name']) ?>
                     </h5>
-
-                    <!-- AUTOR EN LUGAR DE DESCRIPCIÓN -->
+                    <!-- No hay autor directo en la API, se muestra el precio -->
                     <p class="card-text texto-blanco">
-                        <?= $libro['autor_nombre'] . " " . $libro['autor_apellido'] ?>
+                        Precio: $<?= htmlspecialchars($libro['price']) ?>
                     </p>
                 </div>
 
             </a>
         </div>
     </div>
-    <?php endwhile; ?>
+    <?php
+        endforeach;
+    else:
+    ?>
+    <p>No se pudieron cargar los libros destacados en este momento o no hay libros disponibles.</p>
+    <?php endif; ?>
 
 </div>
 
+    <!-- Paginación -->
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <?php if ($paginaActual > 1): ?>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<?= $paginaActual - 1 ?>">Anterior</a>
+                </li>
+            <?php endif; ?>
 
+            <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
+                <li class="page-item <?= ($i == $paginaActual) ? 'active' : '' ?>">
+                    <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
+                </li>
+            <?php endfor; ?>
+
+            <?php if ($paginaActual < $totalPaginas): ?>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<?= $paginaActual + 1 ?>">Siguiente</a>
+                </li>
+            <?php endif; ?>
+        </ul>
+    </nav>
     
 </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

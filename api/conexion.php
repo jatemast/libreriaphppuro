@@ -6,9 +6,9 @@
 header('Content-Type: application/json');
 
 $host = "localhost";
-$user = "u550789311_android12";
-$password = "Carlos12@12";
-$database = "u550789311_libreria";
+$user = "root";
+$password = "";
+$database = "biblioteca2";
 
 $conexion = new mysqli($host, $user, $password, $database);
 

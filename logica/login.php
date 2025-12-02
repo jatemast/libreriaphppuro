@@ -13,7 +13,7 @@
     <div class="login-container" id="formBox">
       <h2>Inicio de Sesion</h2>
 
-      <form action="guardar_registro.php" method="POST" class="mt-4" id="loginForm">
+      <form action="procesar_login.php" method="POST" class="mt-4" id="loginForm">
         <!-- <div class="mb-3">
           <label class="form-label">Nombre:</label>
           <input type="text" class="form-control" name="nombre" required />
@@ -38,6 +38,6 @@
         <a href="../index.php" class="btn btn-secondary">Regresar al inicio</a>
       </div>
     </div>
-    <script src="../js/registro.js"></script>
+    <script src="../js/login.js"></script>
   </body>
 </html>
