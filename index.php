@@ -81,7 +81,7 @@ if ($libros_destacados === null) {
             </a>
         </li>
 
-    <li><a class="dropdown-item" href="../logica/logout.php">Cerrar sesión</a></li>
+    <li><a class="dropdown-item" href="logica/logout.php">Cerrar sesión</a></li>
 </ul>
         </li>
 
@@ -154,6 +154,11 @@ if ($libros_destacados === null) {
                 </div>
 
             </a>
+            <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+                <div class="card-footer text-center">
+                    <a href="libros/editar_libro.php?id=<?= $libro['id'] ?>" class="btn btn-warning btn-sm">Editar</a>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
     <?php
